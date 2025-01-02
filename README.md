@@ -1,8 +1,8 @@
 # hugo-api
 
-# 目的
-1.与各个Server相关的多用途API开发
+# Main
+1.Devlopment of APIs
 
-2.各项目方案，设计书更新
+2.Documents of the project design 
 
-3.资源这和利用
+3.Tools for devlopment
