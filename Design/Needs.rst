@@ -15,3 +15,8 @@ Needs
 
 6.Local host AWS host auto starting 
 
+*** 7.Real AI ass  AIA
+working itself 
+reseching   
+focus on some news
+daily report
