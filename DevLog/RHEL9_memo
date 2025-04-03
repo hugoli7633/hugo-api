@@ -54,3 +54,12 @@ net.core.wmem_max: 1048576
 fs.aio-max-nr: 1048576
 fs.file-max: 6815744
 -------------------------------
+
+
+### SSHD
+
+# block the root login by setting /etc/ssh/sshd_config.d/01-permitrootlogin.conf  in OS after RHEL 9.0
+--------
+PermitRootLogin no
+--------
+
