@@ -1,1 +1,56 @@
 
+### 1.basic
+
+# start kernel 
+/etc/default/grub
+set the parameter by using :
+
+grubby --update-kernel ALL --args selinux=0
+grubby --update-kernel ALL --args ipv6.disable=1
+
+systemctl status firewalld
+systemctl stop firewalld
+systemctl disable firewalld
+
+reboot
+
+# langage
+
+localectl status
+
+localectl list-locales | grep ja
+
+locale set-locale LANG=ja_JP.UTF-8
+
+# font
+vi /etc/vconsole.conf
+---------------------------
+KEYMAP=jp
+FONT=latarcyrheb-sun16
+---------------------------
+systemctl restart systemd-vconsole-setup.service
+
+# time zone
+
+timedatectl status
+
+# system parameters
+/etc/sysctl.conf
+---------------------------
+kernel.panic_on_oops 0      # 1 for phsic server  0 for VM
+fs.suid_dumpable 2          # for "coredumpctl" avaliable
+# set for oracle with 16GB memory
+kernel.shmmax: 8GB (16GBの半分) = 8589934592 バイト
+kernel.shmall: 16GBの全ページ数 = 2097152 (ページサイズが4KBの場合)
+kernel.shmmni: 4096
+kernel.sem: 250 32000 100 128
+fs.file-max: 6815744
+net.ipv4.ip_local_port_range: 9000 65500
+# net.ipv4.ip_local_reserved_ports # to reserve ports in the range which has been set by last parameter
+net.core.rmem_default: 262144
+net.core.rmem_max: 4194304
+net.core.wmem_default: 262144
+net.core.wmem_max: 1048576
+fs.aio-max-nr: 1048576
+fs.file-max: 6815744
+-------------------------------
