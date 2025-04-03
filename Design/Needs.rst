@@ -20,3 +20,6 @@ working itself
 reseching   
 focus on some news
 daily report
+
+
+7.RHEL DB  Summup
