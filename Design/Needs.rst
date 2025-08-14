@@ -11,7 +11,7 @@ Needs
 
 4.blog webapp 
 
-5.stork US report
+5.stork US report (Excel にはそういう機能がある)
 
 6.Local host AWS host auto starting 
 
