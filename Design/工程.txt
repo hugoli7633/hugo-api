@@ -1,0 +1,182 @@
+1. 開発・運用全体フロー
+Phase 1：設計
+
+機能要件の整理
+
+常駐タスク（ニュース収集・株分析・通知）
+
+動的タスク登録（自然言語入力 → DB登録）
+
+株取引履歴DB＋分析
+
+レポート生成（メール送信）
+
+システム構成設計
+
+AWS EC2（Linux）で常時稼働
+
+GitHubでコード管理＆CI/CD
+
+DB：PostgreSQL または MySQL（AWS RDS or EC2内）
+
+ChatGPT API（gpt-4o-miniメイン）
+
+外部データ：Yahoo Finance API / RSSフィード
+
+通知：メール（SMTP） or LINE Notify
+
+データベース設計
+
+users（ユーザー情報）
+
+tasks（タスク内容・頻度・条件）
+
+trade_history（株取引履歴）
+
+analysis_results（分析結果キャッシュ）
+
+Phase 2：開発環境構築
+
+GitHubリポジトリ作成
+
+mainブランチ（安定版）
+
+devブランチ（開発用）
+
+.gitignore（APIキーや.envは除外）
+
+ローカルLinux環境
+
+Python 3.10+
+
+必要ライブラリ（requests, feedparser, schedule, SQLAlchemy, psycopg2, yfinance, openai）
+
+.envファイルで環境変数管理（APIキーやDB接続情報）
+
+PostgreSQL構築
+
+ローカルにDB作成
+
+Alembicなどでマイグレーション管理
+
+Phase 3：AWS環境構築
+
+EC2（Linux）
+
+Ubuntu 22.04推奨
+
+セキュリティグループでSSH・HTTPS・SMTP開放
+
+Python環境 & Gitインストール
+
+RDS（PostgreSQL）
+
+マネージドDBとして構築
+
+VPC内通信（EC2と同じVPC）
+
+Secrets Manager
+
+OpenAI APIキー
+
+メールSMTP認証情報
+
+IAMロール
+
+EC2 → S3やSecrets Managerへのアクセス許可
+
+Phase 4：CI/CDパイプライン
+
+GitHub Actions
+
+mainブランチpush → AWS EC2自動デプロイ
+
+.github/workflows/deploy.yml でSSHデプロイ設定
+
+AWS CLI設定
+
+aws configure で権限設定
+
+S3やCloudWatch Logsも利用可能に
+
+Phase 5：機能実装
+
+ベース機能
+
+ニュース取得（RSS）
+
+株価取得（yfinance）
+
+メール送信（SMTP）
+
+タスク登録
+
+CLI or WebUIで自然言語指示を受け取り→ChatGPT APIで解析→DB登録
+
+スケジューラー
+
+APScheduler で各タスクを実行
+
+実行結果はDBに保存
+
+株式分析
+
+DBの取引履歴参照
+
+評価益・変動率計算
+
+条件一致時のみ通知
+
+レポート生成
+
+Markdown or HTML
+
+PDF化（必要なら）
+
+メール添付送信
+
+Phase 6：運用
+
+常駐化
+
+systemd または pm2 でスクリプト常時稼働
+
+EC2再起動時も自動起動
+
+監視
+
+CloudWatch Logsでログ監視
+
+エラー通知（メール or Slack）
+
+バックアップ
+
+RDSスナップショット
+
+コードはGitHub管理
+
+2. 推奨構成図
+[GitHub] → [GitHub Actions] → [AWS EC2(Linux)]
+                                     ↓
+                                 [Pythonアプリ]
+                                     ↓
+             ┌───────────────┴───────────────┐
+        [AWS RDS(PostgreSQL)]           [外部API(株価/ニュース)]
+                                     ↓
+                                 [ChatGPT API]
+                                     ↓
+                               [メール通知/LINE]
+
+3. 補足ポイント
+
+AWSフリー枠を使えば初年度はほぼ無料運用可能（EC2 t2.micro + RDS t2.micro）
+
+DBは最初はEC2内PostgreSQLでも可（小規模なら安い）
+
+CI/CDを入れるとコード修正が即サーバー反映できる
+
+ChatGPT APIキーやSMTP情報は絶対にGitHubに直書きしない（Secrets Manager利用）
+
+この工程なら、
+1〜2週間で最小動作版（ニュース＋株分析＋メール送信）
+1〜2か月で**完全版（自然言語タスク追加＋条件通知＋CI/CD）**まで行けます。
